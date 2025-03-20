@@ -9,7 +9,7 @@ class ASoC:
         self.token = ""
         
     def login(self):
-        resp = requests.post("https://cloud.appscan.com/api/v4/Account/ApiKeyLogin", json=self.apikey)
+        resp = requests.post("https://cloud.appscan.com/api/v4/Account/ApiKeyLogin", json=self.apikey, timeout=60)
         if(resp.status_code == 200):
             jsonObj = resp.json()
             self.token = jsonObj["Token"]
@@ -25,7 +25,7 @@ class ASoC:
             "Accept": "application/json",
             "Authorization": "Bearer "+self.token
         }
-        resp = requests.get("https://cloud.appscan.com/api/v4/Account/Logout", headers=headers)
+        resp = requests.get("https://cloud.appscan.com/api/v4/Account/Logout", headers=headers, timeout=60)
         if(resp.status_code == 200):
             self.token = ""
             logger.debug(f"ASoC Logged Out")
@@ -40,7 +40,7 @@ class ASoC:
             "Accept": "application/json",
             "Authorization": "Bearer "+self.token
         }
-        resp = requests.get("https://cloud.appscan.com/api/v4/Account/TenantInfo", headers=headers)
+        resp = requests.get("https://cloud.appscan.com/api/v4/Account/TenantInfo", headers=headers, timeout=60)
         return resp.status_code == 200
     
     def getApplication(self, id):
@@ -49,7 +49,7 @@ class ASoC:
             "Authorization": "Bearer "+self.token
         }
         
-        resp = requests.get("https://cloud.appscan.com/api/v4/Apps/"+id, headers=headers)
+        resp = requests.get("https://cloud.appscan.com/api/v4/Apps/"+id, headers=headers, timeout=60)
         
         if(resp.status_code == 200):
             return resp.json()['Items']
@@ -69,7 +69,7 @@ class ASoC:
             "Authorization": "Bearer "+self.token
         }
         
-        resp = requests.get(asoc_url, headers=headers)
+        resp = requests.get(asoc_url, headers=headers, timeout=60)
         
         if(resp.status_code == 200):
             if(is_execution):
@@ -97,7 +97,7 @@ class ASoC:
             "Accept": "application/json",
             "Authorization": "Bearer "+self.token
         }
-        resp = requests.post(url, headers=headers, json=reportConfig)
+        resp = requests.post(url, headers=headers, json=reportConfig, timeout=60)
         if(resp.status_code == 200):
             return resp.json()["Id"]
         else:
@@ -110,7 +110,7 @@ class ASoC:
             "Accept": "application/json",
             "Authorization": "Bearer "+self.token
         }
-        resp = requests.get("https://cloud.appscan.com/api/v4/Reports?%24filter%20eq%20"+reportId, headers=headers)
+        resp = requests.get("https://cloud.appscan.com/api/v4/Reports?%24filter%20eq%20"+reportId, headers=headers, timeout=60)
         if(resp.status_code == 200):
             return resp.json()['Items'][0]["Status"]
         else:
@@ -132,7 +132,7 @@ class ASoC:
             "Accept": "application/json",
             "Authorization": "Bearer "+self.token
         }
-        resp = requests.get("https://cloud.appscan.com/api/v4/Reports/"+reportId+"/Download", headers=headers)
+        resp = requests.get("https://cloud.appscan.com/api/v4/Reports/"+reportId+"/Download", headers=headers, timeout=60)
         if(resp.status_code==200):
             report_bytes = resp.content
             with open(fullPath, "wb") as f:
@@ -148,7 +148,7 @@ class ASoC:
             "Accept": "application/json",
             "Authorization": "Bearer "+self.token
         }
-        resp = requests.get("https://cloud.appscan.com/api/v4/Webhooks", headers=headers)
+        resp = requests.get("https://cloud.appscan.com/api/v4/Webhooks", headers=headers, timeout=60)
         if(resp.status_code==200):
             return resp.json()['Items']
         else:
@@ -171,7 +171,7 @@ class ASoC:
             "Accept": "application/json",
             "Authorization": "Bearer "+self.token
         }
-        resp = requests.post("https://cloud.appscan.com/api/v4/Webhooks", headers=headers, json=data)
+        resp = requests.post("https://cloud.appscan.com/api/v4/Webhooks", headers=headers, json=data, timeout=60)
         if(resp.status_code==200):
             return True
         else:

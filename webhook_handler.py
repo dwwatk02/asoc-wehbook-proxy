@@ -116,7 +116,7 @@ class WebhookHandler:
     Function to make the post request to the webhook
     """
     def postWebhook(self, webhookUrl, data):
-        resp = requests.post(webhookUrl, json=data)
+        resp = requests.post(webhookUrl, json=data, timeout=60)
         return resp.status_code
     
     def handleCustom(self, webhookObj, data):
